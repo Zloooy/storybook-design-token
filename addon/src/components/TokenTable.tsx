@@ -1,7 +1,7 @@
 import React from "react";
 import { transparentize } from "polished";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useVirtual } from "react-virtual";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import {
   Icons,
   TooltipMessage,
@@ -49,10 +49,10 @@ export const TokenTable = ({
     [categories]
   );
 
-  const rowVirtualizer = useVirtual({
-    size: tokens.length,
-    parentRef,
-    estimateSize: useCallback(() => 49, []),
+  const rowVirtualizer = useVirtualizer({
+    count: tokens.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 49,
   });
 
   const ScrollContainer = useMemo(
@@ -217,7 +217,7 @@ export const TokenTable = ({
       <Table
         style={{
           height: `${
-            rowVirtualizer.totalSize +
+            rowVirtualizer.getTotalSize() +
             (theadRef.current?.getBoundingClientRect().height || 0)
           }px`,
           position: "relative",
@@ -235,7 +235,7 @@ export const TokenTable = ({
           </tr>
         </thead>
         <tbody>
-          {rowVirtualizer.virtualItems.map((virtualRow) => {
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => {
             const token = tokens[virtualRow.index];
 
             return (

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useStorageState } from "react-storage-hooks";
 
 import { Category } from "../types/category.types";
 import { Config } from "../types/config.types";
@@ -16,11 +15,15 @@ export function useTokenTabs(config?: Config) {
   const [imageCategories, setImageIconCategories] = useState<Category[]>([]);
 
   const [activeCategory, setActiveCategory] = useState<string>();
-  const [cardView, setCardView] = useStorageState(
-    localStorage,
-    "storybook-design-token-addon-card",
-    false
-  );
+
+  const [cardView, setCardViewState] = useState<boolean>(() => {
+    const storedValue = localStorage.getItem("storybook-design-token-addon-card");
+    return storedValue ? JSON.parse(storedValue) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("storybook-design-token-addon-card", JSON.stringify(cardView));
+  }, [cardView]);
 
   const [styleInjections, setStyleInjections] = useState("");
 
@@ -117,7 +120,7 @@ export function useTokenTabs(config?: Config) {
     activeCategory,
     cardView,
     setActiveCategory,
-    setCardView,
+    setCardView: setCardViewState,
     styleInjections,
     tabs,
   };
