@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
-import glob from "glob";
+import { globSync } from "glob";
 import path from "path";
 
 import { parsePngFiles } from "./parsers/image.parser";
@@ -17,7 +17,7 @@ function getTokenFilePaths(context: any, designTokenGlob?: string): string[] {
     )
     .replace(/\\/g, "/");
 
-  return glob.sync(pattern, {
+  return globSync(pattern, {
     ignore: ["**/node_modules/**", "**/storybook-static/**", "**/*.chunk.*"],
   });
 }

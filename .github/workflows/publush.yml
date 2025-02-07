@@ -1,0 +1,71 @@
+name: Publish to npm and Store Artifacts
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Yarn
+        run: npm install -g yarn
+        working-directory: ./addon
+
+      - name: Install dependencies
+        run: yarn install
+        working-directory: ./addon
+
+      - name: Build the package
+        run: yarn build
+        working-directory: ./addon
+
+      # --- Steps for storing artifacts ---
+
+      - name: Create Release Directory
+        run: mkdir release
+        working-directory: ./addon
+
+      - name: Copy Build Artifacts to Release Directory
+        run: cp -r dist release/
+        working-directory: ./addon
+
+      - name: Zip Release Artifacts
+        run: |
+          cd release
+          zip -r release-artifacts.zip ./*
+        working-directory: ./addon
+
+      - name: Upload Artifacts to GitHub Packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: addon/release/release-artifacts.zip
+          retention-days: 7
+
+      - name: Get Tag Version
+        id: get_version
+        run: echo "VERSION=$(echo ${GITHUB_REF_NAME} | sed 's/v//')" >> $GITHUB_OUTPUT
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: addon/release/release-artifacts.zip
+
+      - name: Publish to npm
+        run: yarn publish
+        working-directory: ./addon
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

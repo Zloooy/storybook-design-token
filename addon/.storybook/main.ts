@@ -7,15 +7,9 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
-  // core: {
-  //   builder: {
-  //     name: "@storybook/builder-webpack5",
-  //     options: {
-  //       fsCache: true,
-  //       lazyCompilation: true,
-  //     },
-  //   },
-  // },
+  core: {
+    builder: '@storybook/builder-vite'
+  },
   docs: {
     autodocs: "tag",
   },
