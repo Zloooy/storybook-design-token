@@ -1,8 +1,7 @@
 ⚠️ **This is the documentation for v3 which supports Storybook v8.5 and newer. Please check the v3 branch for the release supporting Storybook v7 and v2 branch for the release supporting Storybook v6 and below.** ⚠️
 
 # Storybook Design Token Addon
-
-[![npm version](https://badge.fury.io/js/@zloooy/storybook-design-token.svg)](https://www.npmjs.com/package/@zloooy/storybook-design-token)
+[![npm version](https://badge.fury.io/js/@zloooy%2Fstorybook-design-token.svg)](https://badge.fury.io/js/@zloooy%2Fstorybook-design-token)
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/de6a7567-7e09-4753-a3b9-5a058dc8f03f/deploy-status)](https://app.netlify.com/sites/storybook-design-token-v1/deploys)
 
